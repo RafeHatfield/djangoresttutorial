@@ -1,11 +1,15 @@
 from django.forms import widgets
 from rest_framework import serializers
 from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
+from django.contrib.auth.models import User
 
 class SnippetSerializer(serializers.ModelSerializer):
+
+    owner = serializers.Field(source='owner.username')
+
     class Meta:
         model = Snippet
-        fields = ('id', 'title', 'code', 'linenos', 'language', 'style')
+        fields = ('owner', 'id', 'title', 'code', 'linenos', 'language', 'style')
 
     def restore_object(self, attrs, instance=None):
         """
@@ -26,3 +30,11 @@ class SnippetSerializer(serializers.ModelSerializer):
 
         # Create new instance
         return Snippet(**attrs)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    snippets = serializers.PrimaryKeyRelatedField(many=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'snippets')
