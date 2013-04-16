@@ -33,3 +33,8 @@ class SnippetSerializer(serializers.Serializer):
 
         # Create new instance
         return Snippet(**attrs)
+
+class SnippetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Snippet
+        fields = ('id', 'title', 'code', 'linenos', 'language', 'style')
